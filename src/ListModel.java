@@ -1,10 +1,10 @@
 import javax.swing.table.AbstractTableModel;
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 public class ListModel extends AbstractTableModel {
 
@@ -28,10 +28,10 @@ public class ListModel extends AbstractTableModel {
     public void sort() {
         switch (display) {
             case DefaultDisplay:
-                list.sort(Comparator.comparing(Command::getName));
+                list.sort(Comparator.comparing(Command::getName, String.CASE_INSENSITIVE_ORDER));
                 fireTableStructureChanged();
             case SearchingDisplay:
-                filteredList.sort(Comparator.comparing(Command::getName));
+                filteredList.sort(Comparator.comparing(Command::getName, String.CASE_INSENSITIVE_ORDER));
                 fireTableStructureChanged();
         }
 
@@ -41,10 +41,13 @@ public class ListModel extends AbstractTableModel {
     public void search(String str) {
         filteredList.clear();
 
+        str = str.toLowerCase();
+
         for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).getName().contains(str) || list.get(i).getDescription().contains(str)) {
+            if (list.get(i).getName().toLowerCase().contains(str) || list.get(i).getDescription().toLowerCase().contains(str)) {
                 filteredList.add(list.get(i));
             }
+
         }
         display = ScreenDisplay.SearchingDisplay;
         sort();
@@ -55,9 +58,11 @@ public class ListModel extends AbstractTableModel {
         switch (display) {
             case DefaultDisplay:
                 list.add(command);
+                sort();
                 break;
             case SearchingDisplay:
                 filteredList.add(command);
+                sort();
                 break;
             default:
                 throw new RuntimeException("Not valid display type");
@@ -166,6 +171,46 @@ public class ListModel extends AbstractTableModel {
             e.printStackTrace();
         } catch (IndexOutOfBoundsException e) {
             System.out.println("No delimiter found at line: " + c);
+        }
+    }
+
+    public void loadFile(String filename) {
+        list.clear();
+        filteredList.clear();
+        display = ScreenDisplay.DefaultDisplay;
+
+        String line = null;
+        String[] lineArray;
+
+        try {
+            FileReader file = new FileReader(filename);
+            BufferedReader reader = new BufferedReader(file);
+
+            while ((line = reader.readLine()) != null) {
+                lineArray = line.split(", ");
+                add(new Command(lineArray[0], lineArray[1]));
+            }
+            sort();
+            reader.close();
+        } catch (Exception e) {
+            throw new RuntimeException("Loading problem: " + display);
+        }
+    }
+
+    public void saveFile(String filename) {
+        try {
+            FileOutputStream file = new FileOutputStream(filename);
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(file));
+
+            for (int i = 0; i < list.size(); i++) {
+                writer.write(list.get(i).getName() + ", ");
+                writer.write(list.get(i).getDescription());
+                writer.newLine();
+            }
+            writer.close();
+            file.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
