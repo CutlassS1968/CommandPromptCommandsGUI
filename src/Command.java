@@ -3,9 +3,7 @@ public class Command {
     private String name;
     private String description;
 
-    public Command(String name) {
-        this.name = name;
-    }
+    public Command(){}
 
     public Command(String name, String description) {
         this.name = name;

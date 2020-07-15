@@ -214,8 +214,11 @@ public class TerminalCommandsGUI extends JFrame implements ActionListener {
             }
         }
         if (e.getSource() == addItem) {
-//            commandList.add(new Command("Beep", "Boop"));
-            NewCommandDialog dia = new NewCommandDialog();
+            Command cmd = new Command();
+            NewCommandDialog dia = new NewCommandDialog(this, cmd);
+            if (dia.getCloseStatus() == NewCommandDialog.OK) {
+                commandList.add(cmd);
+            }
             resizeTable();
         }
 

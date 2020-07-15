@@ -5,8 +5,6 @@ import java.awt.event.ActionListener;
 
 public class NewCommandDialog extends JDialog implements ActionListener {
 
-    // TODO: FIX DIALOG FORMAT
-
     private JPanel panel;
     private JPanel namePanel;
     private JPanel descriptionPanel;
@@ -19,10 +17,15 @@ public class NewCommandDialog extends JDialog implements ActionListener {
 
     private JButton button;
 
-    private String name;
-    private String description;
+    private Command command;
 
-    public NewCommandDialog() {
+    private int closeStatus;
+    public static final int OK = 0;
+    public static final int CANCEL = 1;
+
+    public NewCommandDialog(JFrame parent, Command cmd) {
+        super(parent, true);
+        command = cmd;
         panel = new JPanel();
         namePanel = new JPanel();
         descriptionPanel = new JPanel();
@@ -32,34 +35,46 @@ public class NewCommandDialog extends JDialog implements ActionListener {
         descriptionField = new JTextField();
         button = new JButton("Ok");
         button.addActionListener(this);
+        nameField.setPreferredSize(new Dimension(100,20));
+        descriptionField.setPreferredSize(new Dimension(100,20));
 
-        namePanel.add(nameLabel);
-        namePanel.add(nameField);
+        namePanel.add(nameLabel, JPanel.LEFT_ALIGNMENT);
+        namePanel.add(nameField, JPanel.CENTER_ALIGNMENT);
 
-        descriptionPanel.add(descriptionLabel);
-        descriptionPanel.add(descriptionField);
+        closeStatus = CANCEL;
+
+        descriptionPanel.add(descriptionLabel, JPanel.LEFT_ALIGNMENT);
+        descriptionPanel.add(descriptionField, JPanel.CENTER_ALIGNMENT);
 
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
+        panel.add(Box.createVerticalStrut(20));
         panel.add(namePanel);
         panel.add(descriptionPanel);
+        panel.add(button, JPanel.BOTTOM_ALIGNMENT);
+        panel.add(Box.createVerticalStrut(20));
 
+        this.setSize(250, 200);
+        this.setLocationRelativeTo(null);
         this.add(panel);
-
-        setTitle("New Command");
+        this.setTitle("New Command");
         this.setVisible(true);
-        this.setPreferredSize(new Dimension(300, 200));
-
+        this.setResizable(false);
     }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == button) {
             if (!nameField.getText().isBlank() && !descriptionField.getText().isBlank()) {
-                name = nameField.getText();
-                description = descriptionField.getText();
+                command.setName(nameField.getText());
+                command.setDescription(descriptionField.getText());
+                closeStatus = OK;
             }
         }
-
         dispose();
+    }
+
+    public int getCloseStatus() {
+        return closeStatus;
     }
 }
