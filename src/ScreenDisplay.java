@@ -1,4 +1,4 @@
 public enum ScreenDisplay {
-    DefaultDisplay,
-    SearchingDisplay,
+  DefaultDisplay,
+  SearchingDisplay,
 }

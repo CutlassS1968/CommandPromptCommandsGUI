@@ -1,28 +1,36 @@
+/**
+ * Basic format for command name and description storage
+ *
+ * @author Evan Johns
+ * @version 0.3
+ * @since 2020-7-14
+ */
 public class Command {
 
-    private String name;
-    private String description;
+  private String name;
+  private String description;
 
-    public Command(){}
+  public Command() {
+  }
 
-    public Command(String name, String description) {
-        this.name = name;
-        this.description = description;
-    }
+  public Command(String name, String description) {
+    this.name = name;
+    this.description = description;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+  public void setDescription(String description) {
+    this.description = description;
+  }
 }
