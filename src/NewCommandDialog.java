@@ -5,6 +5,8 @@ import java.awt.event.ActionListener;
 
 public class NewCommandDialog extends JDialog implements ActionListener {
 
+    // TODO: FIX DIALOG FORMAT
+
     private JPanel panel;
     private JPanel namePanel;
     private JPanel descriptionPanel;
